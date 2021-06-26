@@ -1,0 +1,6 @@
+[submodule "terra-mars-api"]
+	path = terra-mars-api
+	url = git@github.com:RokasBagdonas/terra-mars-api.git
+[submodule "terra-mars-spa"]
+	path = terra-mars-spa
+	url = git@github.com:RokasBagdonas/terra-mars-spa.git

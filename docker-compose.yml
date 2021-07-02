@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
     db:
+      container_name: postgres_12
       image: postgres:12
       environment:
         - POSTGRES_DB=mars
@@ -9,17 +10,33 @@ services:
         - POSTGRES_PASSWORD=thorgate
       volumes:
         - db-data:/var/lib/postgresql/data
+
+    rabbitmq:
+        container_name: rabbitmq
+        image: rabbitmq:3.8.18-management-alpine
+        ports:
+          - "5672:5672"
+          - "15692:15672"
+        volumes:
+          - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+          - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+
     api:
+      container_name: api
       working_dir: /terra-mars-api
       build: ./terra-mars-api
       command: daphne -b 0.0.0.0 -p 8000 mars.asgi:application
+      #command: bash -c "daphne -b 0.0.0.0 -p 8000 mars.asgi:application & celery -A celery worker -l INFO"
       volumes:
-        - .:/app
+        - ./terra-mars-api:/app
       ports:
         - "8000:8000"
       depends_on:
         - db
+        - rabbitmq
+
     frontend:
+        container_name: frontend
         working_dir: /terra-mars-spa
         build: ./terra-mars-spa
         #volumes:

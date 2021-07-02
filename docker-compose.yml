@@ -15,12 +15,15 @@ services:
         container_name: rabbitmq
         image: rabbitmq:3.8.18-management-alpine
         ports:
-          - "5672:5672"
+          #- "5672:5672" # no need to expose to host
           - "15692:15672"
         volumes:
           - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
           - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
-
+          #- ./configs/rabbitmq.conf:/etc/rabbitmq/
+        environment:
+          - RABBITMQ_DEFAULT_USER=admin
+          - RABBITMQ_DEFAULT_PASS=admin
     api:
       container_name: api
       working_dir: /terra-mars-api

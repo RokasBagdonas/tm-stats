@@ -66,10 +66,10 @@ shell-test:
 
 # Utility =======================================================================
 c-shell:
-	docker run -it $(container_name) /bin/bash
+	docker exec -it $(container_id) /bin/bash
 
 api-shell:
-	docker run -it tm-stats_api /bin/bash
+	docker exec -it $(container_id) /bin/bash
 
 clear:
 	docker system prune

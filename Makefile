@@ -65,8 +65,11 @@ shell-test:
 	$(dtest) run --rm web python manage.py shell_plus --ipython
 
 # Utility =======================================================================
-web-shell:
+c-shell:
 	docker run -it $(container_name) /bin/bash
+
+api-shell:
+	docker run -it tm-stats_api /bin/bash
 
 clear:
 	docker system prune

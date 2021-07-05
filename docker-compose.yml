@@ -26,10 +26,10 @@ services:
           - RABBITMQ_DEFAULT_PASS=admin
     api:
       container_name: api
-      working_dir: /terra-mars-api
+      working_dir: /app
       build: ./terra-mars-api
-      command: daphne -b 0.0.0.0 -p 8000 mars.asgi:application
-      #command: bash -c "daphne -b 0.0.0.0 -p 8000 mars.asgi:application & celery -A celery worker -l INFO"
+      command: bash -c "python manage.py runserver 0.0.0.0:8000 & celery -A mars.celery  worker -l INFO"
+      #command: bash -c "daphne -b 0.0.0.0 -p 8000 mars.asgi:application & celery -A mars.celery worker -l INFO"
       volumes:
         - ./terra-mars-api:/app
       ports:
@@ -42,8 +42,8 @@ services:
         container_name: frontend
         working_dir: /terra-mars-spa
         build: ./terra-mars-spa
-        #volumes:
-        #- .:/app
+        volumes:
+        - ./terra-mars-spa:/app
         ports:
          - "8080:80"
         depends_on:

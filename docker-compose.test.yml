@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+    test-db:
+      image: postgres:12
+      environment:
+        - POSTGRES_DB=test
+        - POSTGRES_USER=test
+        - POSTGRES_PASSWORD=test
+    test-web:
+      working_dir: /app
+      build:
+          context: ./terra-mars-api
+          #dockerfile: ./terra-mars-api/Dockerfile
+          args:
+            POETRY_EXPORT_FLAGS: --dev
+      volumes:
+        - ./terra-mars-api:/app
+      depends_on:
+        - test-db

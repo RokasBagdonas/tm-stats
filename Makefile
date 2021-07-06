@@ -46,7 +46,7 @@ flush:
 	$(ddown)
 
 psql:
-	docker exec -it terra-mars-api_db_1 psql -h db mars martian
+	docker exec -it $(container_id) psql -h db mars martian
 
 # Testing =====================================================================
 test-build:

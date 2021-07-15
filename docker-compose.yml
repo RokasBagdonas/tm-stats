@@ -13,6 +13,7 @@ services:
 
     rabbitmq:
         container_name: rabbitmq
+        hostname: rabbit
         image: rabbitmq:3.8.18-management-alpine
         ports:
           #- "5672:5672" # no need to expose to host
@@ -28,8 +29,8 @@ services:
       container_name: api
       working_dir: /app
       build: ./terra-mars-api
-      command: python manage.py runserver 0.0.0.0:8000
-      #command: bash -c "python manage.py runserver 0.0.0.0:8000 & celery -A mars.celery  worker -l INFO"
+      #command: python manage.py runserver 0.0.0.0:8000
+      command: bash -c "python manage.py runserver 0.0.0.0:8000 & celery -A mars.celery  worker -l INFO"
       #command: bash -c "daphne -b 0.0.0.0 -p 8000 mars.asgi:application & celery -A mars.celery worker -l INFO"
       volumes:
         - ./terra-mars-api:/app

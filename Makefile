@@ -1,7 +1,7 @@
 # Aliases =====================================================================
 ddown = docker-compose down --remove-orphans
 dtest = docker-compose -f docker-compose.test.yml
-dmanage = docker-compose run --rm api python manage.py
+dmanage = docker-compose run api python manage.py
 initial_data_path = ./mars_api/data_import/terra-mars-initial-data.csv
 
 # General =====================================================================
@@ -12,6 +12,8 @@ build:
 
 up:
 	docker-compose up
+up-no-f:
+	docker-compose up api db rabbitmq
 
 down:
 	$(ddown)
@@ -21,7 +23,6 @@ import_initial_data:
 
 dmanage:
 	$(dmanage) $(cmd) $(flag);
-	$(ddown)
 
 # API =========================================================================
 api-rebuild:
@@ -31,11 +32,13 @@ api-rebuild:
 # DB ==========================================================================
 migrate:
 	$(dmanage) migrate $(flags);
-	$(ddown)
+
+reset_migrate:
+	$(dmanage) migrate api 0003 --fake;
+	$(dmanage) migrate;
 
 migzero:
 	$(dmanage) migrate mars_api zero;
-	$(ddown)
 
 makemigrations:
 	$(dmanage) makemigrations;
@@ -43,10 +46,10 @@ makemigrations:
 
 flush:
 	$(dmanage) flush;
-	$(ddown)
 
 psql:
-	docker exec -it $(container_id) psql -h db mars martian
+	#docker exec -it $(container_id) psql -h db mars martian
+	pgcli -h $(db_ip) -U martian -d mars
 
 # Testing =====================================================================
 test-build:
@@ -76,4 +79,4 @@ clear:
 
 collectstatic:
 	$(dmanage) collectstatic;
-	$(ddown)
+	#$(ddown)

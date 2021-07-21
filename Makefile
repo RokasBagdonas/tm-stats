@@ -7,6 +7,15 @@ initial_data_path = ./mars_api/data_import/terra-mars-initial-data.csv
 # General =====================================================================
 install: build migrate import_initial_data collectstatic
 
+prod-install: prod-build migrate import_initial_data collectstatic
+
+export-secrets:
+	# git-crypt unencrypt secrets.env
+	# export
+
+prod-build:
+	docker-compose build --file docker-compose.prod.yml --env-file ./secrets.env;
+
 build:
 	docker-compose build
 
